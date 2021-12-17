@@ -24,8 +24,7 @@ public class Controller {
         view.printMessage(ViewText.SURNAME_ENTER);
         checkSurname(scanner);
         view.printMessage(ViewText.NICKNAME_ENTER);
-        Scanner scanner2 = new Scanner(System.in);
-        checkNickname(scanner2);
+        checkNickname(scanner);
         model.setSubscriber(surname, nickname);
         Subscriber subscriber = model.getSubscriber();
         view.printResultRegistration(subscriber.getSurname(), subscriber.getNickname());
