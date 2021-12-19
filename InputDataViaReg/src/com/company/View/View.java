@@ -31,5 +31,4 @@ public class View {
     String getFromBundle(String str) {
         return View.bundle.getString(str);
     }
-
 }

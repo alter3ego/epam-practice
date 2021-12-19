@@ -1,6 +1,7 @@
 package com.company.Controller;
 
 
+import com.company.Model.BD;
 import com.company.Model.Model;
 import com.company.Model.Subscriber;
 import com.company.View.View;
@@ -24,9 +25,7 @@ public class Controller {
 
     public void processUser() {
         Scanner scanner = new Scanner(System.in);
-        view.printMessage(SURNAME_ENTER);
         checkSurname(scanner);
-        view.printMessage(NICKNAME_ENTER);
         checkNickname(scanner);
         model.setSubscriber(surname, nickname);
         Subscriber subscriber = model.getSubscriber();
@@ -34,7 +33,8 @@ public class Controller {
     }
 
     private void checkSurname(Scanner scanner) {
-        while (!scanner.hasNext() || !((surname = scanner.nextLine()).matches(actualRegex())) ||
+        view.printMessage(SURNAME_ENTER);
+        while (!scanner.hasNext() || !((surname = scanner.next()).matches(actualRegex())) ||
                 !checkSurnameLength(surname)) {
             view.printMessage(SURNAME_CONTAIN_ERROR);
             view.printMessage(SURNAME_ENTER);
@@ -45,8 +45,9 @@ public class Controller {
         return surname.length() <= SURNAME_MAX_LENGTH;
     }
 
-    private void checkNickname(Scanner scanner) {
-        while (!scanner.hasNext() || !((nickname = scanner.nextLine()).matches(NICKNAME_REGEX)) ||
+    private void checkNicknameContain(Scanner scanner) {
+        view.printMessage(NICKNAME_ENTER);
+        while (!scanner.hasNext() || !((nickname = scanner.next()).matches(NICKNAME_REGEX)) ||
                 !checkNicknameLength(nickname)) {
             view.printMessage(NICKNAME_CONTAIN_ERROR);
             view.printMessage(NICKNAME_ENTER);
@@ -59,5 +60,20 @@ public class Controller {
 
     private String actualRegex() {
         return (String.valueOf(View.bundle.getLocale()).equals("ua") ? SURNAME_REGEX_UKR : SURNAME_REGEX_LAT);
+    }
+
+    private void checkNickname(Scanner scanner) {
+        do {
+            checkNicknameContain(scanner);
+        } while (compareNicknameWithBD());
+    }
+
+    private boolean compareNicknameWithBD() {
+        if (BD.checkNicknameRepeat(nickname)) {
+            view.printMessage(NICKNAME_REPEAT_ERROR);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

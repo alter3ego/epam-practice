@@ -13,4 +13,5 @@ public interface ViewText {
     String NICKNAME_CONTAIN_ERROR = "input.wrong.login";
     String YOUR_SURNAME = "output.surname";
     String YOUR_NICKNAME = "output.login";
+    String NICKNAME_REPEAT_ERROR = "input.wrong.login.repeat";
 }
