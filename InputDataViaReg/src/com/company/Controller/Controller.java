@@ -1,8 +1,7 @@
 package com.company.Controller;
 
-
-import com.company.Model.BD;
 import com.company.Model.Model;
+import com.company.Model.NotUniqueNicknameException;
 import com.company.Model.Subscriber;
 import com.company.View.View;
 
@@ -26,8 +25,7 @@ public class Controller {
     public void processUser() {
         Scanner scanner = new Scanner(System.in);
         checkSurname(scanner);
-        checkNickname(scanner);
-        model.setSubscriber(surname, nickname);
+        checkAndWriteNickname(scanner);
         Subscriber subscriber = model.getSubscriber();
         view.printResultRegistration(subscriber.getSurname(), subscriber.getNickname());
     }
@@ -62,18 +60,15 @@ public class Controller {
         return (String.valueOf(View.bundle.getLocale()).equals("ua") ? SURNAME_REGEX_UKR : SURNAME_REGEX_LAT);
     }
 
-    private void checkNickname(Scanner scanner) {
-        do {
+    private void checkAndWriteNickname(Scanner scanner) {
+        while (true) {
             checkNicknameContain(scanner);
-        } while (compareNicknameWithBD());
-    }
-
-    private boolean compareNicknameWithBD() {
-        if (BD.checkNicknameRepeat(nickname)) {
-            view.printMessage(NICKNAME_REPEAT_ERROR);
-            return true;
-        } else {
-            return false;
+            try {
+                model.setSubscriber(surname, nickname);
+                break;
+            } catch (NotUniqueNicknameException exc) {
+                view.printMessage(NICKNAME_REPEAT_ERROR);
+            }
         }
     }
 }
